@@ -33,3 +33,6 @@
 Debug/
 Debug/*
 *.d
+
+# Sublime Workspace
+*.sublime-workspace
