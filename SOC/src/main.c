@@ -99,34 +99,38 @@ void algorithm_1(double sampled_i[], double f[]){
 	}
 }
 
-void compute_uf(double f[], double Result[]){
+void compute_uf(double f[], double uf[]){
 	int size=ELEMENT_COUNT(f);
 	double u[size];
 	for(int i=0;i<size;i++){
 		u[i]=step_function(i);
 	}
-	convolve(f,ELEMENT_COUNT(f),u,ELEMENT_COUNT(u),Result);
+	convolve(f,ELEMENT_COUNT(f),u,ELEMENT_COUNT(u),uf);
 }
 
-void compute_vf(double f[], double sampled_v[], double Result[]){
-	convolve(f,ELEMENT_COUNT(f),sampled_v,ELEMENT_COUNT(sampled_v),Result);
+void compute_vf(double f[], double sampled_v[], double vf[]){
+	convolve(f,ELEMENT_COUNT(f),sampled_v,ELEMENT_COUNT(sampled_v),vf);
 }
 
-double max_uf(double uf[]){
+double max_uf(double uf[], int max_index){
 	double max=0;
-	for(int i=0;i<ELEMENT_COUNT(uf),i++){
+	for(int i=0;i<ELEMENT_COUNT(uf);i++){
 		if(uf[i]>max){
 			max=uf[i];
+			max_index=i;
 		}
 	}
 	return max;
 }
 
-double compute_OCV(double vf[],double max, double OCV[]){
-	int size=ELEMENT_COUNT(vf);
+double compute_OCV(double vf[],double max, int max_index){
+	return (double) vf[max_index]/max;
+	
+	
+	/*int size=ELEMENT_COUNT(vf);
 	for(int i=0;i<size;i++){
 		OCV[i]=(double)vf[i]/max;
-	}
+	}*/
 }
 
 int main (void)
@@ -135,17 +139,18 @@ int main (void)
 
 	// Insert application code here, after the board has been initialized.
 	
-	double signal[] = { 1, 1, 1, 1, 1 };
-	double kernel[] = { 1, 1, 1, 1, 1 };
-	double result[ELEMENT_COUNT(signal) + ELEMENT_COUNT(kernel) - 1];
-
-	convolve(signal, ELEMENT_COUNT(signal),
-	kernel, ELEMENT_COUNT(kernel),
-	result);
-
-	printSignal("signal", signal, ELEMENT_COUNT(signal));
-	printSignal("kernel", kernel, ELEMENT_COUNT(kernel));
-	printSignal("result", result, ELEMENT_COUNT(result));
+	double sampled_i[1200];
+	double sampled_v[1200];
+	double f[1200];
+	double vf[1200];
+	double uf[1200];
+	algorithm_1(sampled_i,f);
+	compute_vf(f,sampled_v,vf);
+	compute_uf(f,uf);
+	int max_index=0;
+	double max=max_uf(uf,max_index);
+	double OCV=compute_OCV(vf,max,max_index);
+		
 
 	return 0;
 }
