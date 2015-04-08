@@ -65,21 +65,11 @@ double Signal[/* SignalLen */], size_t SignalLen)
 
 
 int delta_function(int i){
-	if(i==0){
-		return 1;
-	}
-	else{
-		return 0;
-	}
+	return i == 0;
 }
 
 int step_function(int i){
-	if(i>=0){
-		return 1;
-	}
-	else{
-		return 0;
-	}
+	return i >= 0;
 }
 
 void algorithm_1(double sampled_i[], double f[]){
