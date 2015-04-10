@@ -27,6 +27,8 @@
 #include <asf.h>
 #include <stdio.h>
 #include <stddef.h>
+#include <math.h>
+#include <stdlib.h>
 
 void convolve(const double Signal[/* SignalLen */], size_t SignalLen,
 const double Kernel[/* KernelLen */], size_t KernelLen,
@@ -128,19 +130,39 @@ int main (void)
 	board_init();
 
 	// Insert application code here, after the board has been initialized.
-	
-	double sampled_i[1200];
-	double sampled_v[1200];
-	double f[1200];
-	double vf[1200];
-	double uf[1200];
+	int sample_counter=0;
+	double sampled_i[1000];
+	double SOC;
+	double sampled_v[1000];
+	double f[1000];
+	double vf[1000];
+	double uf[1000];
+	int max_index=0;
+	double max;
+	double OCV;
+	//Initial samples
+	while(sample_counter<1000){
+		sampled_i[sample_counter]=input_current;
+		sampled_v[sample_counter]=input_voltage;
+		sample_counter++;
+		delay(10);
+	}
+	sample_counter=0;
+	//First measurement for SOC
 	algorithm_1(sampled_i,f);
 	compute_vf(f,sampled_v,vf);
 	compute_uf(f,uf);
-	int max_index=0;
-	double max=max_uf(uf,max_index);
-	double OCV=compute_OCV(vf,max,max_index);
-		
-
+	max=max_uf(uf,max_index);
+	OCV=compute_OCV(vf,max,max_index);
+	SOC_index=round(OCV*100);
+	SOC=SOC_lookup_table[SOC_index];
+	coulomb_count=current_lookup_table[round(SOC*100)];
+	while(1){
+		algorithm_1(sampled_i,f);
+		compute_vf(f,sampled_v,vf);
+		compute_uf(f,uf);
+		max=max_uf(uf,max_index);
+		OCV=compute_OCV(vf,max,max_index);	
+	}
 	return 0;
 }
