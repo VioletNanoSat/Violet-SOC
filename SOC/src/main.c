@@ -125,6 +125,16 @@ double compute_OCV(double vf[],double max, int max_index){
 	}*/
 }
 
+void compute_h(double OCV, double vf[], double uf[], double h[]){
+	int size=ELEMENT_COUNT(h);
+	for int(i=0;i<size;i++){
+		h[i]=vf[i]-OCV*uf[i];
+	}
+}
+
+void compute_new_voltage(double sampled_v[], double sampled_current[], )
+
+
 int main (void)
 {
 	board_init();
@@ -140,6 +150,15 @@ int main (void)
 	int max_index=0;
 	double max;
 	double OCV;
+	double SOC_lookup_table[1200];
+	double current_lookup_table[1200];
+	double h[1000];
+	for (int i=0;i<1200;i++){
+		SOC_lookup_table[i]=(double) i/100;	
+	}
+	for (int i=0;i<1200;i++){
+		current_lookup_table[i]=(double) 0;
+	}
 	//Initial samples
 	while(sample_counter<1000){
 		sampled_i[sample_counter]=input_current;
@@ -154,6 +173,7 @@ int main (void)
 	compute_uf(f,uf);
 	max=max_uf(uf,max_index);
 	OCV=compute_OCV(vf,max,max_index);
+	compute_h(OCV,vf,uf,h);
 	SOC_index=round(OCV*100);
 	SOC=SOC_lookup_table[SOC_index];
 	coulomb_count=current_lookup_table[round(SOC*100)];
