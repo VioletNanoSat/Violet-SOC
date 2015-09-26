@@ -64,8 +64,8 @@ void printSignal(const char* Name, double Signal[/* SignalLen */], size_t Signal
 #define ELEMENT_COUNT(X) (sizeof(X) / sizeof((X)[0]))
 int main(void)
 {
-	double signal[] = { 1, 1, 1, 1, 1 };
-	double kernel[] = { 1, 1, 1, 1, 1 };
+	double signal[] = { .05, .06, .07 };
+	double kernel[] = { .27, .54, .37};
 	double result[ELEMENT_COUNT(signal) + ELEMENT_COUNT(kernel) - 1];
 
 	convolve(signal, ELEMENT_COUNT(signal),
