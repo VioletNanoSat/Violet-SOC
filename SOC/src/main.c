@@ -30,9 +30,7 @@
 #include <math.h>
 #include <stdlib.h>
 
-void convolve(const double Signal[/* SignalLen */], size_t SignalLen,
-const double Kernel[/* KernelLen */], size_t KernelLen,
-double Result[/* SignalLen + KernelLen - 1 */])
+void convolve(const double Signal[/* SignalLen */], size_t SignalLen, const double Kernel[/* KernelLen */], size_t KernelLen, double Result[/* SignalLen + KernelLen - 1 */])
 {
 	size_t n;
 
@@ -52,20 +50,32 @@ double Result[/* SignalLen + KernelLen - 1 */])
 	}
 }
 
-// void printSignal(const char* Name,
-// double Signal[/* SignalLen */], size_t SignalLen)
-// {
-// 	size_t i;
+void printSignal(const char* Name, double Signal[/* SignalLen */], size_t SignalLen)
+{
+	size_t i;
 
-// 	for (i = 0; i < SignalLen; i++)
-// 	{
-// 		printf("%s[%zu] = %f\n", Name, i, Signal[i]);
-// 	}
-// 	printf("\n");
-// }
+	for (i = 0; i < SignalLen; i++)
+	{
+		printf("%s[%zu] = %f\n", Name, i, Signal[i]);
+	}
+	printf("\n");
+}
 #define ELEMENT_COUNT(X) (sizeof(X) / sizeof((X)[0]))
+int main(void)
+{
+	double signal[] = { 1, 1, 1, 1, 1 };
+	double kernel[] = { 1, 1, 1, 1, 1 };
+	double result[ELEMENT_COUNT(signal) + ELEMENT_COUNT(kernel) - 1];
+
+	convolve(signal, ELEMENT_COUNT(signal),
+	kernel, ELEMENT_COUNT(kernel),
+	result);
+
+	return 0;
+}
 
 
+/*
 int delta_function(int i){
 	return i == 0;
 }
@@ -121,7 +131,7 @@ double compute_OCV(double vf[],double max, int max_index){
 	/*int size=ELEMENT_COUNT(vf);
 	for(int i=0;i<size;i++){
 		OCV[i]=(double)vf[i]/max;
-	}*/
+	}
 }
 
 void compute_h(double OCV, double vf[], double uf[], double h[], int size){
@@ -206,4 +216,4 @@ int main (void)
 		OCV=compute_OCV(vf,max,max_index);
 	}
 	return 0;
-}
+}*/
